@@ -1,0 +1,25 @@
+{
+  "name": "gulp-highlights",
+  "version": "1.0.0",
+  "description": "gulp plugins for highlights npm module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pure-js/gulp-highlights.git"
+  },
+  "keywords": [
+    "gulpplugin"
+  ],
+  "dependencies": {
+    "highlights": "^1.4.1"
+  },
+  "author": "pure-js",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pure-js/gulp-highlights/issues"
+  },
+  "homepage": "https://github.com/pure-js/gulp-highlights#readme"
+}
