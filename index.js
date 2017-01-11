@@ -1,42 +1,39 @@
 // through2 is a thin wrapper around node transform streams
-var through = require('through2');
-var gutil = require('gulp-util');
-var PluginError = gutil.PluginError;
+const fs = require('fs');
+const Highlights = require('highlights');
 
 // Consts
 const PLUGIN_NAME = 'gulp-highlights';
 
-function prefixStream(prefixText) {
-  var stream = through();
-  stream.write(prefixText);
-  return stream;
-}
-
 // Plugin level function(dealing with files)
-function gulpPrefixer(prefixText) {
+function gulpHighlights(opt) {
+  const folder = './exercises/';
+  const tmpFolder = '.tmp/';
 
-  if (!prefixText) {
-    throw new PluginError(PLUGIN_NAME, 'Missing prefix text!');
-  }
-  prefixText = new Buffer(prefixText); // allocate ahead of time
-
-  // Creating a stream through which each file will pass
-  return through.obj(function(file, enc, cb) {
-    if (file.isNull()) {
-      // return empty file
-      cb(null, file);
-    }
-    if (file.isBuffer()) {
-      file.contents = Buffer.concat([prefixText, file.contents]);
-    }
-    if (file.isStream()) {
-      file.contents = file.contents.pipe(prefixStream(prefixText));
-    }
-
-    cb(null, file);
-
+  fs.mkdir(tmpFolder, function(err) {
+    if (err) throw err;
   });
 
+  fs.readdir(folder, (err, files) => {
+    files.forEach(file => {
+      if(file.indexOf('.') !== -1) {
+        let contents = fs.readFileSync(folder + file, 'utf8');
+
+        highlighter = new Highlights();
+        let html = highlighter.highlightSync({
+          fileContents: contents,
+          scopeName: 'source.js'
+        });
+
+        let htmlFile = file.replace(/\.[^/.]+$/, '.html');
+
+        fs.writeFile(tmpFolder + htmlFile, html, (err) => {
+          if (err) throw err;
+          console.log(htmlFile + ' is saved!');
+        });
+      }
+    });
+  });
 }
 
 // Exporting the plugin main function
